@@ -2,10 +2,10 @@
 <html>
   <head>
     <title>ErlChat</title>
-    <link rel=stylesheet href="/static/css/style.css" />
+    <link rel=stylesheet href="{{ _base_url }}/static/css/style.css" />
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/static/js/chat.js"></script>
-    <script src="/static/js/mustache.js"></script>
+    <script src="{{ _base_url }}/static/js/chat.js"></script>
+    <script src="{{ _base_url }}/static/js/mustache.js"></script>
     <script>
       $(document).ready(function() {
         Chat.buildChatWindow({
@@ -42,6 +42,7 @@
         Gevent</span> Erlang and OTP make building a scalable chat server simple and fun.
         Check out the source code <a href="http://github.com/kristiankristensen/erlchat/">here</a>.
         </p>
+		Url: {{ _base_url }}
         <label id="whoareyou" for="nickname">Who are you?</label>
         <input id="nickname" type="text"></input>
         <input id="login-button" type="submit" name="join" value="join"
@@ -58,7 +59,7 @@
               <label id="current-username" for="message">anonymous:</label>
               <textarea id="message"></textarea>
               <input id="send-button" type="submit" name="send" value="send"
-                  disabled="disabled" />                
+                  disabled="disabled" />
               <span id="chat-errors" class="errors" style="display: none;"></span>
             </div>
           </div>

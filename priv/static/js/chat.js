@@ -58,7 +58,7 @@ var Chat = (function($) {
     var desiredUsername = $.trim($usernameField.val());
     $.ajax({
       type: "GET",
-      url: "/chat/login/" + desiredUsername,
+      url: "/chat/chat/login/" + desiredUsername,
       async: true,
       cache: false,
       timeout: 5000,
@@ -161,7 +161,7 @@ var Chat = (function($) {
     $composeMessageField.attr("disabled", "disabled");
 
     data = 'nickname=' + username + '&message=' + message;
-    $.post('/chat/send_message/public', data)
+    $.post('/chat/chat/send_message/public', data)
       .success( function(){
         $composeMessageField.val("");
         $chatErrors.toggle(false);
@@ -188,7 +188,7 @@ var Chat = (function($) {
       console.log(lastMessageTimestamp)
     $.ajax({
       type: "GET",
-      url: "/chat/receive_chat/public/" + lastMessageTimestamp,
+      url: "/chat/chat/receive_chat/public/" + lastMessageTimestamp,
       async: true,
       cache: false,
       timeout: 1200000,
