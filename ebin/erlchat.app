@@ -1,6 +1,6 @@
 {application,erlchat,
     [{description,"My Awesome Web Framework"},
-     {vsn,"0.0.1"},
+     {vsn,"0.0.2"},
      {modules,
          [erlchat_incoming_mail_controller,erlchat_outgoing_mail_controller,
           erlchat_chat_controller,message,erlchat_view_lib_tags,

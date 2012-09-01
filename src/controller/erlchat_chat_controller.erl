@@ -1,4 +1,4 @@
--module(erlchat_chat_controller, [Req]).
+-module(erlchat_chat_controller, [Req, Session]).
 -compile(export_all).
 
 login('GET', [Username]) ->
@@ -7,11 +7,19 @@ login('GET', [Username]) ->
 
 logout('GET', [Username]) ->
     create_and_push_message("public", string:concat(Username, " left the room"), "system"),
-    {output, "ok"}.    
+	boss_session:remove_session_data(Session, "chatlogin"),
+    {output, "ok"}.
 
 live('GET', [Channel]) ->
     Timestamp = boss_mq:now(Channel),
-    {ok, [{timestamp, Timestamp}, {channel, Channel}]}.
+	case boss_session:get_session_data(Session, "chatlogin") of
+		{error, Reason} ->
+			{ok, [{error, Reason}]};
+		undefined ->
+			{ok, [{error, "Not logged in."}]};
+		Chatuser ->
+			{ok, [{timestamp, Timestamp}, {channel, Channel}, {chatuser, Chatuser}]}
+	end.
 
 send_message('POST', [Channel]) ->
     create_and_push_message(Channel, list_to_binary(Req:post_param("message")), Req:post_param("nickname")),
@@ -30,5 +38,5 @@ send_test_message('GET', []) ->
 create_and_push_message(Channel, Message, Username) ->
     NewMessage = message:new(id, Message, Username, erlang:localtime()),
     boss_mq:push(Channel, NewMessage).
-    
-   
+
+

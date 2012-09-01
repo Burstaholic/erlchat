@@ -52,37 +52,41 @@ var Chat = (function($) {
     $chatElements.toggle(enabled);
   }
 
-  // Performs an ajax call to log the user in.  Sends an empty POST request
-  // with the username in the request URL.
+  // Notifies the controller to broadcast a login announcement
   var login = function() {
     var desiredUsername = $.trim($usernameField.val());
-    $.ajax({
-      type: "GET",
-      url: "/chat/chat/login/" + desiredUsername,
-      async: true,
-      cache: false,
-      timeout: 5000,
-      success: function(data){
-        username = desiredUsername;
-        loggedIn = true;
-        $usernameDisplay.text(username);
-        setChatDisplay(true);
-        $loginErrors.toggle(false);
-        $composeMessageField.focus();
-        poll();
-      },
-      error: function(XMLHttpRequest, textStatus, errorThrown) {
-        handleError($loginErrors, textStatus, errorThrown);
+	if (desiredUsername.length > 0)
+	{
+		$.ajax({
+			type: "GET",
+			url: "/chat/chat/login/" + desiredUsername,
+			async: true,
+			cache: false,
+			timeout: 5000,
+			success: function(data)
+			{
+				username = desiredUsername;
+				loggedIn = true;
+				$usernameDisplay.text(username);
+				//setChatDisplay(true);
+				$loginErrors.toggle(false);
+				$composeMessageField.focus();
+				poll();
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+					           handleError($loginErrors, textStatus, errorThrown);
+							         }
+				});
       }
-    });
-  };
+	else
+		document.write("Empty username - something has gone horribly wrong. You should duck.");
+  }
 
-  // Performs an ajax call to log the user out.  Sends an empty DELETE request
-  // with the username in the request URL.
+  // Notifies the controller to broadcast a logout announcement, and returns to the home page
   var logout = function() {
     $.ajax({
-      type: "DELETE",
-      url: "/login/" + username,
+      type: "GET",
+      url: "/chat/chat/logout/" + username,
       async: true,
       cache: false,
       timeout: 30000,
@@ -91,10 +95,11 @@ var Chat = (function($) {
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
         // do nothing, we logout in complete even if we fail
-        handleErrors($loginErrors, textStatus, errorThrown);
+        //handleError($loginErrors, textStatus, errorThrown);
       },
       complete: function() {
-        logoutClient()
+        //logoutClient()
+		window.location.replace("http://dev.skewedaspect.com:8001");
       }
     });
   }
@@ -290,6 +295,7 @@ var Chat = (function($) {
       if($.trim($composeMessageField.val()))
         sendMessageClick(event);
     });
+	login();
   };
 
   // set a short default timeout
